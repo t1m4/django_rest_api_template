@@ -23,7 +23,7 @@ environ.Env.read_env()  # reading .env file
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('SECRET_KEY','django-insecure-_)xu10$3sefp&gko!#gjf-!(r1v6v49cflf&l12=)_$e5b6bpk')
+SECRET_KEY = env.str('SECRET_KEY','hello')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_api',
 ]
 
 MIDDLEWARE = [

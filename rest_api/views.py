@@ -7,7 +7,9 @@ from django.http import HttpResponse, JsonResponse
 from django.utils.decorators import classonlymethod, method_decorator
 from django.views import View
 from rest_framework import status
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import renderer_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -135,3 +137,14 @@ class UserDetailView(APIView):
             return HttpResponse(status=204)
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+
+class ExampleView(APIView):
+    authentication_classes = [SessionAuthentication, ]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        content = {
+            'user': str(request.user),  # `django.contrib.auth.User` instance.
+            'auth': str(request.auth),  # None
+        }
+        return Response(content)

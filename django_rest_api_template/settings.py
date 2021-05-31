@@ -23,7 +23,7 @@ environ.Env.read_env()  # reading .env file
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('SECRET_KEY','hello')
+SECRET_KEY = env.str('SECRET_KEY', 'hello')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -73,6 +73,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'django_rest_api_template.wsgi.application'
+# REST API
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

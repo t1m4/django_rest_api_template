@@ -6,12 +6,14 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
 from django.utils.decorators import classonlymethod, method_decorator
 from django.views import View
+from rest_framework import status
 from rest_framework.decorators import renderer_classes
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from rest_api.serializers import UserSerializer
+from rest_api.tools import get_object_or_none
 
 
 class AsyncMixin:
@@ -100,9 +102,36 @@ class UserAsyncView(AsyncView):
 
 class UserView(APIView):
     def get(self, request, *args, **kwargs):
-        users = User.objects.all()
+        try:
+            size = int(request.GET.get('size'))
+        except:
+            size = 10
+        size = 10 if size > 10 else size
+        users = User.objects.all()[0:size]
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
-    async def post(self, request, *args, **kwargs):
-        pass
+
+class UserDetailView(APIView):
+    def get(self, request, id, *args, **kwargs):
+        user = get_object_or_none(User, id=id)
+        if user:
+            serializer = UserSerializer(user)
+            return Response(serializer.data)
+        else:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+    def put(self, request, id, *args, **kwargs):
+        user = get_object_or_none(User, id=id)
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.update(user, serializer.validated_data)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id, *args, **kwargs):
+        user = get_object_or_none(User, id=id)
+        if user:
+            user.delete()
+            return HttpResponse(status=204)
+        else:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)

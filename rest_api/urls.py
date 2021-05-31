@@ -4,5 +4,6 @@ from rest_api import views
 
 urlpatterns = [
     path('users/', views.UserView.as_view(), name='rest_api-users'),
+    path('users/<int:id>', views.UserDetailView.as_view(), name='rest_api-user_detail'),
     path('async_users/', views.UserAsyncView.as_view(), name='rest_api-users'),
 ]
